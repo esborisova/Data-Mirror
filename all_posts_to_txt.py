@@ -37,14 +37,14 @@ from sklearn.decomposition import LatentDirichletAllocation
 
 def extract_posts(dataset: pd.DataFrame) -> list:
     posts = []
-    for i in dataset:
-        try:
-            for j in i['data']:
-                for key in j.keys():
-                    if key == 'post':
-                        posts.append(j[key])
-        except KeyError:
-            pass
+    for i in data:
+          try:
+               for j in i['data']:
+                    for key in j.keys():
+                        if (key == 'post') and ('har skrevet') and ('tidslinje') not in i['title']:
+                            posts.append(j[key])
+          except KeyError:
+              pass
     return posts 
 
 

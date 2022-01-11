@@ -38,14 +38,14 @@ from sklearn.decomposition import LatentDirichletAllocation
 
 def extract_posts(dataset: pd.DataFrame) -> list:
     posts = []
-    for i in dataset:
-        try:
-            for j in i['data']:
-                for key in j.keys():
-                    if key == 'post':
-                        posts.append(j[key])
-        except KeyError:
-            pass
+    for i in data:
+          try:
+               for j in i['data']:
+                    for key in j.keys():
+                        if (key == 'post') and ('har skrevet') and ('tidslinje') not in i['title']:
+                            posts.append(j[key])
+          except KeyError:
+              pass
     return posts 
 
 
@@ -101,11 +101,6 @@ def load_data(path: str, argument):
         dataset = json.load(f)
     return dataset
 
-#def load_data(path: str):
-
-#    with open(path, encoding = 'utf-8') as f:
-#        dataset = json.load(f)
-#    return dataset
 
 def remove_after_dot(argument):
     sep = '.'
