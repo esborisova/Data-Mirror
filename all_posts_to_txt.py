@@ -1,19 +1,6 @@
-#pip install nltk
-#pip install spacy
-#python -m spacy download da_core_news_sm
-
-#pip install gensim
-#pip install pyLDAvis
-
 import json
 import pandas as pd
-import spacy
 import re
-import nltk
-#nltk.download('stopwords')
-from nltk.corpus import stopwords 
-from nltk.tokenize import word_tokenize
-#nltk.download('punkt')
 import codecs
 import sys
 
@@ -22,30 +9,20 @@ import pathlib
 from pathlib import Path
 import os
 
-import gensim
-from gensim.models import CoherenceModel, LdaModel, LsiModel, HdpModel
-from gensim.corpora import Dictionary
-
-import pyLDAvis.gensim_models
-import pyLDAvis.sklearn
-#pyLDAvis.enable_notebook()
-
-from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
-from sklearn.decomposition import LatentDirichletAllocation
-
-
 
 def extract_posts(dataset: pd.DataFrame) -> list:
     posts = []
     for i in data:
-          try:
-               for j in i['data']:
-                    for key in j.keys():
-                        if (key == 'post') and ('har skrevet') and ('tidslinje') not in i['title']:
-                            posts.append(j[key])
-          except KeyError:
-              pass
-    return posts 
+        try:
+            if ('har skrevet' in i['title']) and ('tidslinje' in i['title']):
+                continue
+        except KeyError:
+            pass
+        for j in i['data']:
+            for key in j.keys():
+                if (key == 'post'):
+                    posts.append(j[key])
+    return posts
 
 
 def load_data(path: str, argument):
@@ -76,4 +53,4 @@ all_posts = extract_posts(data)
 
 print(len(all_posts))
 
-create_txt(all_posts, name = 'all_data.txt', path = 'data/JSON_files/prepared_txt')
+create_txt(all_posts, name = 'all_data_updated.txt', path = 'data/JSON_files/output_txt_updated')

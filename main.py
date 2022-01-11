@@ -39,14 +39,16 @@ from sklearn.decomposition import LatentDirichletAllocation
 def extract_posts(dataset: pd.DataFrame) -> list:
     posts = []
     for i in data:
-          try:
-               for j in i['data']:
-                    for key in j.keys():
-                        if (key == 'post') and ('har skrevet') and ('tidslinje') not in i['title']:
-                            posts.append(j[key])
-          except KeyError:
-              pass
-    return posts 
+        try:
+            if ('har skrevet' in i['title']) and ('tidslinje' in i['title']):
+                continue
+        except KeyError:
+            pass
+        for j in i['data']:
+            for key in j.keys():
+                if (key == 'post'):
+                    posts.append(j[key])
+    return posts
 
 
 
@@ -153,9 +155,9 @@ all_posts = extract_posts(data)
 
 print(len(all_posts))
 
-create_txt(all_posts, str(sys.argv[1]), 'data/JSON_files/prepared_txt/')
+create_txt(all_posts, str(sys.argv[1]), 'data/JSON_files/output_txt_updated/')
 
-decoded_data = decode('data/JSON_files/prepared_txt', str(sys.argv[1]))
+decoded_data = decode('data/JSON_files/output_txt_updated/', str(sys.argv[1]))
 
 #print(len(decoded_data))
 
