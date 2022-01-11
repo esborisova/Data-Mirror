@@ -12,16 +12,19 @@ import os
 
 def extract_posts(dataset: pd.DataFrame) -> list:
     posts = []
-    for i in data:
+    for i in dataset:
         try:
             if ('har skrevet' in i['title']) and ('tidslinje' in i['title']):
                 continue
         except KeyError:
             pass
-        for j in i['data']:
-            for key in j.keys():
-                if (key == 'post'):
-                    posts.append(j[key])
+        try:
+            for j in i['data']:
+                for key in j.keys():
+                    if (key == 'post'):
+                        posts.append(j[key])
+        except KeyError:
+            pass
     return posts
 
 
