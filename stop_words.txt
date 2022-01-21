@@ -22,6 +22,7 @@ bliver
 burde
 bør
 boer
+com
 ca.
 da
 de
@@ -48,6 +49,7 @@ disse
 dit
 dog
 du
+dk
 efter
 egen
 ej
