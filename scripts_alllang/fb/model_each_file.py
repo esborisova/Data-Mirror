@@ -50,7 +50,7 @@ def decode(path: str, argument) -> list:
 
 
 # Change Danish special letters
-def change_letter(dataset: pd.DataFrame) -> list:
+def change_letter(dataset: list) -> list:
 
     new_dataset = [re.sub('ø', 'oe', text) for text in dataset]
     new_dataset = [re.sub('æ', 'ae', text) for text in new_dataset]
