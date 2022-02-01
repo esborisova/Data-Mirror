@@ -27,7 +27,7 @@ def load_data(path: str, argument):
 
 
 # Extract posts from json file
-def extract_posts(dataset: pd.DataFrame) -> list:
+def extract_posts(dataset: list) -> list:
     posts = []
     for i in dataset:
         try:
