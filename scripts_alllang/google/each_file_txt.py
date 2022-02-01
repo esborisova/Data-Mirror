@@ -20,7 +20,7 @@ def load_data(path: str, argument):
 
  
 # Extract the description for the web link 
-def extract_title(dataset: pd.DataFrame) -> list:
+def extract_title(dataset: list) -> list:
     titles = []
     for i in dataset['Browser History']:
             try:
