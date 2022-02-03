@@ -112,8 +112,4 @@ ldamodel = LdaModel(corpus = corpus,
 
 model = pyLDAvis.gensim_models.prepare(ldamodel, corpus, dictionary)
 
-<<<<<<< HEAD
 save_model(model, 'models_fb', 'your_posts_1_AG.html')
-=======
-save_model(model, 'models', 'your_posts_1_AG.html')
->>>>>>> a70e4bdce4c06a2441c944bcc411a55a823ee226
