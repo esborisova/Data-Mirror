@@ -1,3 +1,4 @@
+from curses import nl
 import json
 import pandas as pd
 import spacy
@@ -36,43 +37,29 @@ nlp = spacy.load("da_core_news_sm")
 # Load stop words list
 
 stops_path = 'stops_final.txt'
-file_path = 'data/fb/JSON_files/your_posts_1_AG.json'
+file_path = 'data/google/JSON_files/BrowserHistory_BL.json'
 
 file = open(stops_path,"r+")
 stops = file.read().split()
 
-
 data = load_json(file_path)
 
-# for generic model
-#date = '1/1/2020' 
+titles = extract_title(data)
 
-extracted_posts = extract_posts(data)
+titles = change_letter(titles)
 
-save_txt(extracted_posts, 'data/fb/prepared_txt', 'your_posts_1_AG2.txt')
+cleaned_titles = clean_text(titles)
 
-decoded_data = decode('data/fb/prepared_txt/your_posts_1_AG2.txt')
+no_empty_strings = [string for string in cleaned_titles if string != ""]
 
-no_mentions = remove_mentions(decoded_data)
+tokenized_titles= tokenize(no_empty_strings)
 
-# Remove any strings which became empty as a result of mentions filtering 
-no_empty_str = [string for string in  no_mentions if string != ""]
+lemmatized_titles = lemmatize(tokenized_titles, nlp = nlp)
 
-no_empty_str = change_letter(no_empty_str)
+# For some reason we again have words with special letters 
+lemmatized_titles = change_char(lemmatized_titles)
 
-cleaned_data = clean_text(no_empty_str)
-
-# Check for and remove empty strings again 
-cleaned_data = [string for string in cleaned_data if string != ""]
-
-tokenized_data = tokenize(cleaned_data)
-
-lemmatized_data = lemmatize(tokenized_data, nlp = nlp)
-
-# After lemmatization we again have words with special letters 
-lemmatized_data = change_char(lemmatized_data)
-
-no_stops = remove_stops(lemmatized_data, stops)
+no_stops = remove_stops(lemmatized_titles, stops)
 
 # Check for empty lists and remove them
 no_stops = [l for l in no_stops if len(l) != 0]
@@ -112,8 +99,7 @@ ldamodel = LdaModel(corpus = corpus,
 
 model = pyLDAvis.gensim_models.prepare(ldamodel, corpus, dictionary)
 
-<<<<<<< HEAD
-save_model(model, 'models_fb', 'your_posts_1_AG.html')
-=======
-save_model(model, 'models', 'your_posts_1_AG.html')
->>>>>>> a70e4bdce4c06a2441c944bcc411a55a823ee226
+save_model(model, 'models_google', 'BrowserHistory_BL.html')
+
+
+

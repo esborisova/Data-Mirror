@@ -51,7 +51,11 @@ def load_json(path: str) -> list:
 
 def extract_posts(dataset: list,
                   date: str = None) -> list:
+<<<<<<< HEAD
+    """Extracts Facebook posts from a json file
+=======
     """Extracts facebook posts from a json file
+>>>>>>> a70e4bdce4c06a2441c944bcc411a55a823ee226
 
     Args:
         dataset (list): A list with json formated data
@@ -90,6 +94,33 @@ def extract_posts(dataset: list,
 
 
 
+<<<<<<< HEAD
+def extract_title(dataset: list) -> list:
+
+    """Extracts Google browse titles from a json file
+
+    Args:
+        dataset (list): A list with json formated data
+
+        date (str): An optional argument. The date from which to collect the posts. The date should have '%d/%m/%y' format. 
+
+    Returns:
+          titles (list): The list of strings (title's text) 
+    """
+
+    titles = []
+
+    for i in dataset['Browser History']:
+            try:
+                 titles.append(i['title'])
+            except KeyError:
+                    pass
+    return titles
+
+
+
+=======
+>>>>>>> a70e4bdce4c06a2441c944bcc411a55a823ee226
 def save_txt(dataset: list, 
              folder_name: str, 
              file_name: str):
