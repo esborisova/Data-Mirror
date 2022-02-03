@@ -51,11 +51,7 @@ def load_json(path: str) -> list:
 
 def extract_posts(dataset: list,
                   date: str = None) -> list:
-<<<<<<< HEAD
     """Extracts Facebook posts from a json file
-=======
-    """Extracts facebook posts from a json file
->>>>>>> a70e4bdce4c06a2441c944bcc411a55a823ee226
 
     Args:
         dataset (list): A list with json formated data
@@ -94,7 +90,6 @@ def extract_posts(dataset: list,
 
 
 
-<<<<<<< HEAD
 def extract_title(dataset: list) -> list:
 
     """Extracts Google browse titles from a json file
@@ -119,8 +114,6 @@ def extract_title(dataset: list) -> list:
 
 
 
-=======
->>>>>>> a70e4bdce4c06a2441c944bcc411a55a823ee226
 def save_txt(dataset: list, 
              folder_name: str, 
              file_name: str):
