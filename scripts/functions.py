@@ -8,32 +8,20 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 #nltk.download('punkt')
 import codecs
-import sys
-import datetime
-
-import json
-import sys
 import pathlib
 from pathlib import Path
 import os
-
-
 import gensim
 from gensim.models import CoherenceModel, LdaModel, LsiModel, HdpModel
 from gensim.corpora import Dictionary
-
 import pyLDAvis.gensim_models
 import pyLDAvis.sklearn
-
-
-from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.decomposition import LatentDirichletAllocation
 
 
 
 
 def load_json(path: str) -> list:
-
     """Loads json file and saves in a list
 
     Args:
@@ -51,13 +39,10 @@ def load_json(path: str) -> list:
 
 def extract_posts(dataset: list,
                   date: str = None) -> list:
-<<<<<<< HEAD
     """Extracts Facebook posts from a json file
-=======
-    """Extracts facebook posts from a json file
->>>>>>> a70e4bdce4c06a2441c944bcc411a55a823ee226
 
     Args:
+
         dataset (list): A list with json formated data
 
         date (str): An optional argument. The date from which to collect the posts. The date should have '%d/%m/%y' format. 
@@ -94,9 +79,7 @@ def extract_posts(dataset: list,
 
 
 
-<<<<<<< HEAD
 def extract_title(dataset: list) -> list:
-
     """Extracts Google browse titles from a json file
 
     Args:
@@ -119,12 +102,9 @@ def extract_title(dataset: list) -> list:
 
 
 
-=======
->>>>>>> a70e4bdce4c06a2441c944bcc411a55a823ee226
 def save_txt(dataset: list, 
              folder_name: str, 
              file_name: str):
-
     """Creates a folder and saves data into a txt file 
 
     Args:
@@ -158,14 +138,6 @@ def save_txt(dataset: list,
 
 
 def decode(path: str) -> list:
-    """Encodes, decodes and loads data
-
-    Args:
-       path (str): The path to data
-
-    Returns:
-          data (list): A list of strings
-    """
 
     f = codecs.open(path, errors = 'ignore', encoding = 'utf-8')
     data = f.read()
@@ -177,14 +149,6 @@ def decode(path: str) -> list:
 
 
 def remove_mentions(dataset: list) -> list:
-    """Removes strings starting with @ (mentions of people)
-
-    Args:
-        dataset (list): A list of strings
-
-    Returns:
-          new_dataset (list): An updated list of strings 
-    """
 
     new_dataset = []
 
@@ -198,14 +162,6 @@ def remove_mentions(dataset: list) -> list:
 
 
 def change_letter(dataset: list) -> list:
-    """Substitutes Danish special letters
-
-    Args:
-       dataset (list): A list of strings
-
-    Returns:
-          new_dataset (list): An updated list of strings
-    """
 
     new_dataset = [re.sub('ø', 'oe', text) for text in dataset]
     new_dataset = [re.sub('æ', 'ae', text) for text in new_dataset]
@@ -224,16 +180,7 @@ def change_letter(dataset: list) -> list:
 
 
 
-
 def clean_text(dataset: list) -> list:
-    """Removes URLs, special charecters, double spaces, spaces in the begining/end of a string, lowercase
-
-    Args:
-       dataset(list): A list of strings
-
-    Returns:
-          cleaned_text (list): A list of cleaned strings
-    """
    
     no_urls = [re.sub(r"http\S+", "", text) for text in dataset] 
     no_special_ch = [re.sub(r"(#[A-Za-z]+)|(@[A-Za-z]+)|([^A-Za-z \t])|(\w+:\/\/\S+)", ' ' , text) for text in no_urls] 
@@ -247,14 +194,6 @@ def clean_text(dataset: list) -> list:
 
 
 def tokenize(dataset: list) -> list:
-    """Tokenizes strings
-
-    Args:
-       dataset (list): A list of strings
-
-    Returns:
-          tokens (list): A list of lists with tokenized strings
-    """
     
     tokens = [word_tokenize(text) for text in dataset] 
 
@@ -263,17 +202,7 @@ def tokenize(dataset: list) -> list:
 
 
 def lemmatize_str(text: list, nlp) -> list:
-    """Lemmatizes tokenized strings
-    
-    Args:
-       text (list): A list of tokenized strings 
 
-       nlp: A model for Danish text preprocessing
-
-    Returns:
-          lemmas (list): A list of lemmatized strings 
-    """
-   
     lemmas = [x.lemma_ for x in nlp(text)]
 
     return lemmas
@@ -281,16 +210,6 @@ def lemmatize_str(text: list, nlp) -> list:
 
 
 def lemmatize(dataset: list, nlp) -> list:
-    """"Lemmatizes a list of lists with tokenized strings
-    
-    Args:
-       dataset (list): A list of list of tokenized strings 
-
-       nlp: A model for Danish text preprocessing
-
-    Returns:
-          lemmas (list): A list of lemmatized strings 
-    """
   
     lemmas = []
 
@@ -304,16 +223,6 @@ def lemmatize(dataset: list, nlp) -> list:
 
 def remove_stops(dataset: list,
                  stopwords: list) -> list:
-    """Removes stop words
-
-    Args:
-       dataset (list): A list of lists with lemmatized strings
-
-       stopwords (list): A list of strings (stop words)
-
-    Returns:
-          no_stopwords (list): A list of lists with lemmatized strings cleaned from stop words     
-    """
 
     no_stopwords = []
 
@@ -329,15 +238,7 @@ def remove_stops(dataset: list,
 
 
 def change_char(dataset: list) -> list:
-    """Changes Danish special characters in a list of lists
 
-    Args:
-       dataset (list): A list of lists with strings
-
-    Returns:
-          dataset (list): An updated input dataset
-    """
-    
     for i in range (len(dataset)):
         dataset[i] = change_letter(dataset[i] )
     return dataset
@@ -345,14 +246,6 @@ def change_char(dataset: list) -> list:
 
 
 def rem_single_char(dataset: list) -> list:
-    """Removes strings containing only 1 character
-
-    Args:
-       dataset (list): A list of lists with strings
-
-    Returns:
-          dataset (list): An input dataset cleaned from strings with single characters 
-    """
     
     for i in dataset:
         for j in i:
@@ -368,7 +261,6 @@ def compute_c_v(dictionary,
                 min_topics: int, 
                 max_topics: int, 
                 step: int) -> list:
-
     """Computes c_v coherence score 
 
     Args:
@@ -385,12 +277,10 @@ def compute_c_v(dictionary,
        step (int): Step with which to iterete across the topics
 
     Returns:
-          coherence_values (list): The list with c_v scores for each number of topics
-           
+          coherence_values (list): The list with c_v scores for each number of topics          
     """
 
     coherence_values = []
-    model_list = []
     
     for num_topics in range(min_topics, max_topics, step):
 
@@ -400,8 +290,6 @@ def compute_c_v(dictionary,
                          update_every = 1,
                          passes = 10,
                          per_word_topics = True)
-
-        model_list.append(model)
 
         coherencemodel = CoherenceModel(model = model, 
                                         texts = texts, 
