@@ -1,3 +1,10 @@
+import sys
+import pathlib
+from pathlib import Path
+import os
+import os
+import datetime as dt
+import time
 import json
 import pandas as pd
 import spacy
@@ -17,6 +24,7 @@ from gensim.corpora import Dictionary
 import pyLDAvis.gensim_models
 import pyLDAvis.sklearn
 from sklearn.decomposition import LatentDirichletAllocation
+
 
 
 
@@ -102,30 +110,43 @@ def extract_title(dataset: list) -> list:
 
 
 
-def save_txt(dataset: list, 
-             folder_name: str, 
-             file_name: str):
-    """Creates a folder and saves data into a txt file 
+#def save_txt(dataset: list, 
+#             folder_name: str, 
+#             file_name: str):
+#    """Creates a folder and saves data into a txt file 
+#
+#    Args:
+#        dataset (list): A list of strings 
+#        
+#        folder name (str): The name of a folder to create
+#
+#        file_name (str): The name of a txt file with data
+#    """
+#    
+#    current_dir = pathlib.Path().resolve()
+#    path = os.path.join(current_dir, folder_name)
+#
+#    if not os.path.exists(folder_name):
+#        os.mkdir(path)
+#
+#    file_path = os.path.join(path, file_name) 
+#    
+#    if os.path.exists(file_path):
+#        pass
+#
+#    f = open(file_path, 'w')
+#    
+#    for item in dataset:
+#        without_line_breaks = item.replace("\n", " ")
+#        without_line_breaks = without_line_breaks.replace("\r", " ")
+#        lines = without_line_breaks + "\n"
+#        f.write(lines)
+#    f.close()
 
-    Args:
-        dataset (list): A list of strings 
-        
-        folder name (str): The name of a folder to create
 
-        file_name (str): The name of a txt file with data
-    """
-    
-    current_dir = pathlib.Path().resolve()
-    path = os.path.join(current_dir, folder_name)
 
-    if not os.path.exists(folder_name):
-        os.mkdir(path)
-
-    file_path = os.path.join(path, file_name) 
-    
-    if os.path.exists(file_path):
-        pass
-
+def save_txt(dataset: list,  
+              file_path: str):
     f = open(file_path, 'w')
     
     for item in dataset:
@@ -237,6 +258,12 @@ def remove_stops(dataset: list,
 
 
 
+def remove_empty_str(data: list):
+    result = [string for string in data if string != ""]
+    return result
+
+
+
 def change_char(dataset: list) -> list:
 
     for i in range (len(dataset)):
@@ -252,6 +279,26 @@ def rem_single_char(dataset: list) -> list:
             if len(j)<2:
                 i.remove(j)
     return dataset
+
+
+def dict_settings(data: list):
+   
+    bigram = gensim.models.Phrases(data)
+    dictionary = Dictionary(data)
+    corpus = [dictionary.doc2bow(text) for text in data]
+
+    return bigram, dictionary, corpus
+
+
+
+def topic_settings(data: list):
+    
+    max_topics = set_max_topics(data)
+    min_topics = 2
+    step = 2
+    x = range(min_topics, max_topics, step)
+
+    return x, min_topics, max_topics, step
 
 
 
@@ -345,7 +392,54 @@ def save_model(model,
 
     file_path = os.path.join(path, file_name) 
     
-    if os.path.exists(file_path):
-        pass
+    #if os.path.exists(file_path):
+    #    pass
 
     pyLDAvis.save_html(model, file_path)
+
+
+def clean_folder(path: str):
+    for filename in os.listdir(path):
+        file_path = os.path.join(path, filename)
+        try:
+            os.unlink(file_path)
+    
+        except Exception as e:
+            print('Failed to delete %s. Reason: %s' % (file_path, e))
+
+
+def get_time(file_path: str):
+
+    st = os.stat(file_path)    
+    atime = dt.datetime.fromtimestamp(st.st_atime)
+    now = dt.datetime.now()
+    ago = now-dt.timedelta(minutes = 1)
+
+    return atime, ago
+
+def prepare_input(data):
+    
+    bigram = gensim.models.Phrases(data)
+    dictionary = Dictionary(data)
+    corpus = [dictionary.doc2bow(text) for text in data]
+                        
+    return bigram, dictionary, corpus
+
+
+def slice_data(data):
+                            
+    n = 20
+
+    if len(data) > n:
+        data_generic = data[-n:]
+    else:
+        data_generic = data
+
+    return data_generic
+
+def txt_append(path, data):
+
+    file_object = open(path, 'a')
+    file_object.write(str(data)[1:-1])
+    file_object.write(',')
+    file_object.close()
